@@ -1,0 +1,54 @@
+﻿@page "/Delete/{Id}"
+@using PubtracSSPoc.Data
+@inject CopyholderService copyholderService
+@inject NavigationManager NavigationManager
+
+<h2>Delete Copyholder</h2>
+<hr />
+<h3>Are you sure want to delete this?</h3>
+<form>
+    <div class="row">
+        <div class=" col-md-8">
+            <div class="form-group">
+                <label>Copyholder Id:</label>
+                <label>@obj.Id</label>
+            </div>
+            <div class="form-group">
+                <label>User ID:</label>
+                <label>@obj.UserId</label>
+            </div>
+            <div class="form-group">
+                <label>Name:</label>
+                <label>@obj.FirstName &nbsp; @obj.LastName</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-danger" @onclick="@DeleteTheCopyholder" value="Delete" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Copyholder obj = new Copyholder();
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => copyholderService.GetCopyholderAsync(Convert.ToInt32(Id)));
+    }
+    protected async void DeleteTheCopyholder()
+    {
+        await copyholderService.DeleteCopyholderAsync(obj);
+        NavigationManager.NavigateTo("Copyholders");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Copyholders");
+    }
+}

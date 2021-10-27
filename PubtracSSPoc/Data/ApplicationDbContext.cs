@@ -14,5 +14,7 @@ namespace PubtracSSPoc.Data
         }
 
         public DbSet<Copyholder> Copyholders { get; set; }
+        public DbSet<Manuals> Manuals { get; set; }
+        public DbSet<ManualToCopyHolder> ManualToCopyHolders { get; set; }
     }
 }

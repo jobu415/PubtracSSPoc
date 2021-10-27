@@ -1,0 +1,53 @@
+﻿@page "/Manuals"
+@using PubtracSSPoc.Data
+@inject ManualService manualService
+
+<NavLink class="nav-link" href="AddManual">
+    <span class="oi oi-plus" aria-hidden="true">Add New</span>
+
+</NavLink>
+
+<h1>Manual Info</h1>
+@if (EmpObj is null)
+{
+    <p><em>Loading... !</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Manual Name</th>
+                <th>Number</th>
+                <th>Holders</th>                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in EmpObj)
+            {
+            <tr>
+                <td>@emp.Manual</td>
+                <td>@emp.ManualNo</td>
+                <td>Click Here</td>
+                <td>
+                    <a class="nav-link" href="EditManual/@emp.Id">
+                        <span class="oi oi-pencil" aria-hidden="true">Edit</span>
+                    </a>
+                    <a class="nav-link" href="DeleteManual/@emp.Id">
+                        <span class="oi oi-trash" aria-hidden="true">Delete</span>
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    List<PubtracSSPoc.Data.Manuals> EmpObj;
+    protected override async Task OnInitializedAsync()
+    {
+        EmpObj = await Task.Run(() => manualService.GetAllManualsAsync());
+    }
+}

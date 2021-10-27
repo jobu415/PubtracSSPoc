@@ -1,0 +1,120 @@
+﻿@page "/Assign"
+
+@using PubtracSSPoc.Data
+@using Blazored.Typeahead
+
+
+@inject ManualService manualService
+@inject NavigationManager NavigationManager
+@inject ManualToCopyHolderService manualToCopyHolderService
+@inject CopyholderService copyHolderService
+
+<h2>AssignManualToCopyholder</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Name" class="control-label">User ID:</label>
+                <BlazoredTypeahead SearchMethod="SearchCopyHolders"
+                                   @bind-Value="@obj.Copyholder">
+                    <SelectedTemplate>
+                        @context.UserId
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.FirstName @context.LastName (@context.UserId)
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Manual Number</label>
+                <BlazoredTypeahead SearchMethod="SearchManuals"
+                                   @bind-Value="@obj.Manual">
+                    <SelectedTemplate>
+                        @context.ManualNo
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.ManualNo - @context.Manual - @context.LastRevNo
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Copy Number</label>
+                <input form="Name" class="form-control" @bind="@obj.CopyNo" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Date Of Issue</label>
+                <RadzenDatePicker @bind-Value=@obj.IssueDate DateFormat="d" />
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateManualToCopyHolder" value="Save" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+@code {
+    PubtracSSPoc.Data.ManualToCopyHolder obj = new PubtracSSPoc.Data.ManualToCopyHolder();
+    protected async void CreateManualToCopyHolder()
+    {
+        await manualToCopyHolderService.InsertManualToCopyHolderAsync(obj);
+        NavigationManager.NavigateTo("Assign");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Assign");
+    }
+
+    [Parameter] public IEnumerable<Copyholder> CopyHolders { get; set; }
+
+    private async Task<IEnumerable<Copyholder>> SearchCopyHolders(string searchText)
+    {
+
+        return await Task.FromResult(CopyHolders.Where(x => x.UserId.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    [Parameter] public IEnumerable<PubtracSSPoc.Data.Manuals> TheManuals { get; set; }
+
+    private async Task<IEnumerable<PubtracSSPoc.Data.Manuals>> SearchManuals(string searchText)
+    {
+
+        return await Task.FromResult(TheManuals.Where(x => x.ManualNo.ToLower().Contains(searchText.ToLower())).ToList());
+    }
+
+    void SomeStartupMethod()
+    {
+        // Do Some Work
+        if(obj.IssueDate == null || !obj.IssueDate.HasValue)
+        {
+            obj.IssueDate = DateTime.Now;
+        }
+    }
+
+    Task SomeStartupTask()
+    {
+        // Do some task based work
+        var getCHTask = Task.Run(async () => await copyHolderService.GetAllCopyholdersAsync());
+        if (CopyHolders == null) { CopyHolders = getCHTask.Result; }
+
+        var getMTask = Task.Run(async () => await manualService.GetAllManualsAsync());
+        if (TheManuals == null) { TheManuals = getMTask.Result; }
+
+
+        return Task.CompletedTask;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SomeStartupMethod();
+        await SomeStartupTask();
+    }
+}

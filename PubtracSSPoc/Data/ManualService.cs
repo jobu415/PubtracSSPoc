@@ -38,7 +38,13 @@ namespace PubtracSSPoc.Data
         #region Get Manual by Id
         public async Task<Manuals> GetManualAsync(int Id)
         {
-            Manuals manual = await _appDBContext.Manuals.FirstOrDefaultAsync(c => c.Id.Equals(Id));
+            Manuals manual = await _appDBContext.Manuals.FirstOrDefaultAsync(c => c.ManualId.Equals(Id));
+            return manual;
+        }
+
+        public async Task<Manuals> GetManualByManualNumberAsync(string manualNo)
+        {
+            Manuals manual = await _appDBContext.Manuals.FirstOrDefaultAsync(c => c.ManualNo.Equals(manualNo));
             return manual;
         }
         #endregion

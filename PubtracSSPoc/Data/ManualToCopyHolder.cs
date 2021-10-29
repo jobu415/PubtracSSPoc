@@ -13,11 +13,9 @@ namespace PubtracSSPoc.Data
         //public string ManualNo { get; set; }
         public string CopyNo { get; set; }
         public DateTime? IssueDate { get; set; }
-
-        [ForeignKey("ManualNo")]
-        public Manuals Manual { get; set; }
-
-        [ForeignKey("UserId")]
-        public Copyholder Copyholder { get; set; }
+        [ForeignKey("ManualId")]
+        public virtual Manuals TheManual { get; set; }
+        [ForeignKey("CopyholderId")]
+        public virtual Copyholder Copyholder { get; set; }
     }
 }

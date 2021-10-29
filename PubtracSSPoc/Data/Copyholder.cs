@@ -9,7 +9,7 @@ namespace PubtracSSPoc.Data
     public class Copyholder
     {
         [Key]
-        public int Id { get; set; }
+        public int CopyholderId { get; set; }
         [Required]
         public string UserId { get; set; }
         [Required]

@@ -1,0 +1,66 @@
+﻿@page "/ListManualsForCopyholder/{TheUserId}"
+
+
+@inject ManualToCopyHolderService manualToCopyHolderService
+@inject CopyholderService copyHolderService
+
+@using PubtracSSPoc.Data
+
+@if (EmpObj is null)
+{
+    <p><em>Loading... !</em></p>
+}
+else
+{
+    <h3>@TheCopyHolder.FirstName @TheCopyHolder.LastName (@TheCopyHolder.UserId) - @TheCopyHolder.Station</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Manual</th>
+                <th>Manual No.</th>
+                <th>Copy No.</th>
+                <th>Delete Record</th>
+                <th>Create Receipts</th>
+                <th>View Receipts</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in EmpObj)
+            {
+                <tr>
+                    <td>@emp.TheManual.Manual</td>
+                    <td>@emp.TheManual.ManualNo</td>
+                    <td>@emp.CopyNo</td>
+                    <td>
+                        <a class="nav-link" href="DeleteManualForCopyholder/@emp.Id">
+                            <span class="oi oi-trash" aria-hidden="true">Delete</span>
+                        </a>
+                    </td>
+                    <td>TBD</td>
+                    <td>TBD</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string TheUserId { get; set; }
+
+    public Copyholder TheCopyHolder { get; set; }
+
+    List<PubtracSSPoc.Data.ManualToCopyHolder> EmpObj;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        TheCopyHolder = await Task.Run(() => copyHolderService.GetCopyholderAsyncByUserId(TheUserId));
+        
+        EmpObj = await Task.Run(() => manualToCopyHolderService.GetAllManualsForCopyHoldersAsync(TheCopyHolder.UserId));
+
+
+    }
+
+}

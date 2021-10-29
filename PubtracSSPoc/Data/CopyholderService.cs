@@ -38,7 +38,13 @@ namespace PubtracSSPoc.Data
         #region Get Copyholder by Id
         public async Task<Copyholder> GetCopyholderAsync(int Id)
         {
-            Copyholder copyholder = await _appDBContext.Copyholders.FirstOrDefaultAsync(c => c.Id.Equals(Id));
+            Copyholder copyholder = await _appDBContext.Copyholders.FirstOrDefaultAsync(c => c.CopyholderId.Equals(Id));
+            return copyholder;
+        }
+
+        public async Task<Copyholder> GetCopyholderAsyncByUserId(string userId)
+        {
+            Copyholder copyholder = await _appDBContext.Copyholders.FirstOrDefaultAsync(c => c.UserId.Equals(userId));
             return copyholder;
         }
         #endregion

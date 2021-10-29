@@ -8,7 +8,8 @@ namespace PubtracSSPoc.Data
 {
     public class Manuals
     {
-        public int Id { get; set; }
+        [Key]
+        public int ManualId { get; set; }
 
 
         [Required]

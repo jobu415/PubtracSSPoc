@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PubtracSSPoc.Data;
 
 namespace PubtracSSPoc.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211029184510_UpdatedEntityRelations")]
+    partial class UpdatedEntityRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,9 +297,13 @@ namespace PubtracSSPoc.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CopyholderId");
+                    b.HasIndex("CopyholderId")
+                        .IsUnique()
+                        .HasFilter("[CopyholderId] IS NOT NULL");
 
-                    b.HasIndex("ManualId");
+                    b.HasIndex("ManualId")
+                        .IsUnique()
+                        .HasFilter("[ManualId] IS NOT NULL");
 
                     b.ToTable("ManualToCopyHolders");
                 });
@@ -385,16 +391,26 @@ namespace PubtracSSPoc.Data.Migrations
             modelBuilder.Entity("PubtracSSPoc.Data.ManualToCopyHolder", b =>
                 {
                     b.HasOne("PubtracSSPoc.Data.Copyholder", "Copyholder")
-                        .WithMany()
-                        .HasForeignKey("CopyholderId");
+                        .WithOne("ManualToCopyHolder")
+                        .HasForeignKey("PubtracSSPoc.Data.ManualToCopyHolder", "CopyholderId");
 
                     b.HasOne("PubtracSSPoc.Data.Manuals", "TheManual")
-                        .WithMany()
-                        .HasForeignKey("ManualId");
+                        .WithOne("ManualToCopyHolder")
+                        .HasForeignKey("PubtracSSPoc.Data.ManualToCopyHolder", "ManualId");
 
                     b.Navigation("Copyholder");
 
                     b.Navigation("TheManual");
+                });
+
+            modelBuilder.Entity("PubtracSSPoc.Data.Copyholder", b =>
+                {
+                    b.Navigation("ManualToCopyHolder");
+                });
+
+            modelBuilder.Entity("PubtracSSPoc.Data.Manuals", b =>
+                {
+                    b.Navigation("ManualToCopyHolder");
                 });
 #pragma warning restore 612, 618
         }

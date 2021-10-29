@@ -1,6 +1,6 @@
-﻿@page "/DeleteManual/{Id}"
+﻿@page "/DeleteManualForCopyholder/{Id}"
 @using PubtracSSPoc.Data
-@inject ManualService manualService
+@inject ManualToCopyHolderService manualService
 @inject NavigationManager NavigationManager
 
 <h2>Delete Manual</h2>
@@ -11,15 +11,15 @@
         <div class=" col-md-8">
             <div class="form-group">
                 <label>manual Id:</label>
-                <label>@obj.ManualId</label>
+                <label>@obj.Id</label>
             </div>
             <div class="form-group">
                 <label>Manual Number:</label>
-                <label>@obj.ManualNo</label>
+                <label>@obj.TheManual.ManualNo</label>
             </div>
             <div class="form-group">
-                <label>Name:</label>
-                <label>@obj.Manual</label>
+                <label>User:</label>
+                <label>@obj.Copyholder.UserId</label>
             </div>
         </div>
 
@@ -37,18 +37,18 @@
 @code {
     [Parameter]
     public string Id { get; set; }
-    PubtracSSPoc.Data.Manuals obj = new PubtracSSPoc.Data.Manuals();
+    PubtracSSPoc.Data.ManualToCopyHolder obj = new PubtracSSPoc.Data.ManualToCopyHolder();
     protected override async Task OnInitializedAsync()
     {
-        obj = await Task.Run(() => manualService.GetManualAsync(Convert.ToInt32(Id)));
+        obj = await Task.Run(() => manualService.GetManualToCopyHolderAsync(Convert.ToInt32(Id)));
     }
     protected async void DeleteTheManual()
     {
-        await manualService.DeleteManualAsync(obj);
-        NavigationManager.NavigateTo("Manuals");
+        await manualService.DeleteManualToCopyHolderAsync(obj);
+        NavigationManager.NavigateTo("ListManualsForCopyholder/"+obj.Copyholder.UserId);
     }
     void Cancel()
     {
-        NavigationManager.NavigateTo("Manuals");
+        NavigationManager.NavigateTo("ListManualsForCopyholder/"+obj.Copyholder.UserId);
     }
 }

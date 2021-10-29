@@ -28,12 +28,12 @@ else
             <tr>
                 <td>@emp.Manual</td>
                 <td>@emp.ManualNo</td>
-                <td>Click Here</td>
+                <td><a href="Assign/@emp.ManualId">Click Here</a></td>
                 <td>
-                    <a class="nav-link" href="EditManual/@emp.Id">
+                    <a class="nav-link" href="EditManual/@emp.ManualId">
                         <span class="oi oi-pencil" aria-hidden="true">Edit</span>
                     </a>
-                    <a class="nav-link" href="DeleteManual/@emp.Id">
+                    <a class="nav-link" href="DeleteManual/@emp.ManualId">
                         <span class="oi oi-trash" aria-hidden="true">Delete</span>
                     </a>
                 </td>
@@ -50,4 +50,5 @@ else
     {
         EmpObj = await Task.Run(() => manualService.GetAllManualsAsync());
     }
+
 }

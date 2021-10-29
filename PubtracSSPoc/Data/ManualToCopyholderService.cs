@@ -36,6 +36,17 @@ namespace PubtracSSPoc.Data
             }
             return returnList;
         }
+        public async Task<List<ManualToCopyHolder>> GetAllManualsToCopyHolderByManualByAsync(int manualId)
+        {
+            List<ManualToCopyHolder> returnList = new List<ManualToCopyHolder>();
+
+            if (_appDBContext.ManualToCopyHolders != null && _appDBContext.ManualToCopyHolders.ToList().Count > 0)
+            {
+
+                returnList = await _appDBContext.ManualToCopyHolders.Where(x => x.TheManual.ManualId.Equals(manualId)).ToListAsync();
+            }
+            return returnList;
+        }
         #endregion
 
         #region Insert ManualToCopyHolder

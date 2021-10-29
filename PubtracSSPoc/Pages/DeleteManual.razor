@@ -1,11 +1,16 @@
 ﻿@page "/DeleteManual/{Id}"
+
 @using PubtracSSPoc.Data
+
 @inject ManualService manualService
+@inject ManualToCopyHolderService manualToCopyholderService
 @inject NavigationManager NavigationManager
 
 <h2>Delete Manual</h2>
 <hr />
 <h3>Are you sure want to delete this?</h3>
+<h3>Any records linking the Manual to a Copyholder will also be deleted.</h3>
+<br/>
 <form>
     <div class="row">
         <div class=" col-md-8">
@@ -44,6 +49,20 @@
     }
     protected async void DeleteTheManual()
     {
+
+        //if any manuals are linked to the deleted copyholder, wipe those out.
+        var linkedRecords = await manualToCopyholderService.GetAllManualsToCopyHolderByManualByAsync(obj.ManualId);
+
+        if (linkedRecords.Count > 0)
+        {
+            foreach (var record in linkedRecords)
+            {
+                await manualToCopyholderService.DeleteManualToCopyHolderAsync(record);
+            }
+        }
+
+
+
         await manualService.DeleteManualAsync(obj);
         NavigationManager.NavigateTo("Manuals");
     }

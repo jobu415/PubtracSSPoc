@@ -24,7 +24,9 @@ namespace PubtracSSPoc.Data
         public string State { get; set; }
         public string Zip { get; set; }
         public string Company { get; set; }
+        [Phone]
         public string Phone { get; set; }
+        [EmailAddress]
         public string Email { get; set; }
         public string Remarks { get; set; }
 

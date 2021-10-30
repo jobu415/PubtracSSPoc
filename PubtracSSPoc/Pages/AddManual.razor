@@ -6,7 +6,11 @@
 <h2>Add Manual</h2>
 <hr />
 
-<form>
+<EditForm Model="@obj">
+
+    <DataAnnotationsValidator />    
+    <ValidationSummary />
+
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -36,14 +40,22 @@
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
-                <input type="button" class="btn btn-primary" @onclick="@CreateManual" value="Save" />
+                <button type="submit" class="btn btn-primary" @onclick="@CreateManual">Save</button>
+                @*<input type="button" typeof="Submit" class="btn btn-primary" @onclick="@CreateManual" value="Save" />*@
                 <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
             </div>
         </div>
     </div>
-</form>
+</EditForm>
 
 @code {
+
+
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("OnValidSubmit");
+    }
     PubtracSSPoc.Data.Manuals obj = new PubtracSSPoc.Data.Manuals();
     protected async void CreateManual()
     {
